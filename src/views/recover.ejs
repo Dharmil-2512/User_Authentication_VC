@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forgot Password</title>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+    <!-- load bootstrap css -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+    <!-- load fontawesome -->
+    <style>
+        body {
+            padding-top: 80px;
+        }
+        
+        h1 {
+            font-family: Georgia, "Times New Roman", Times, serif;
+            font-size: 22px;
+            color: black;
+            text-align: center;
+        }
+        
+        h2 {
+            font-family: Georgia, "Times New Roman", Times, serif;
+            font-size: 18px;
+            color: gray;
+            text-align: center;
+        }
+        
+        p {
+            font-family: Georgia, "Times New Roman", Times, serif;
+            font-size: 16px;
+            color: gray;
+            text-align: center;
+        }
+        
+        button {
+            background-color: blue;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            font-size: 14px;
+            display: inline-block;
+            margin-left: 41%;
+            cursor: pointer;
+        }
+        
+        form {
+            border-radius: 5px;
+            background-color: #f2f2f2;
+            padding: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <form action="">
+
+        <div class="jumbotron text-center">
+            <h1><span class="fa fa-lock"></span>Forgot Password</h1>
+            <h2>Hello
+                <%= name %>
+            </h2>
+
+            <p>Simply click the below button to reset Your password</p>
+            <a href="http://localhost:3000/user/resetPassword/<%=resetPasswordToken%>"><button>Reset Your Password</button></a>
+
+    </form>
+
+</body>
+
+</html>
