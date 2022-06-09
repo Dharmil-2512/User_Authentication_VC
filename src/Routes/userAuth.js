@@ -2,14 +2,18 @@
     const controller = require('../controller/user.controller');
     const validator = require('express-joi-validation').createValidator({})
     const joiValidation = require('../validators/index');
+    const { upload } = require('../middleware/multer');
 
 
 
 
 
 
-
-    router.post('/signup', validator.body(joiValidation.signupSchema), controller.signUp)
+    router.get('/hello', (req, res) => {
+        console.log('hello');
+        return res.send("hello Chirag")
+    })
+    router.post('/signup', upload.single('image'), validator.body(joiValidation.signupSchema), controller.signUp)
     router.get("/emailVerify/:EmailVerifyToken", controller.signUpVerification);
     router.post('/login', validator.body(joiValidation.loginSchema), controller.login);
     router.post("/forgotPassword", controller.forgotPassword);

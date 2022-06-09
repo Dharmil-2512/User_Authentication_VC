@@ -1,6 +1,7 @@
 const multer = require('multer');
 
 const path = require('path');
+const { nextTick } = require('process');
 let storageEngine = multer.diskStorage({
     destination: function(req, file, cb) {
 
@@ -8,11 +9,13 @@ let storageEngine = multer.diskStorage({
     },
     filename: function(req, file, cb) {
         let fileName = Date.now() + '-' + file.originalname
+        console.log("🚀 ~ file: multer.js ~ line 11 ~ file.originalname", file.originalname)
+
         req.savedFileName = fileName
         cb(null, fileName)
     }
 })
-const typeArray = ["image/jpg", "image/jpeg", "image/png"];
+const typeArray = ["image/jpg", "image/jpeg", "image/png", "image/gif"];
 exports.upload = multer({
     storage: storageEngine,
 
@@ -26,4 +29,5 @@ exports.upload = multer({
 
         return cb(new Error('extension is not valid', false));
     }
+
 });

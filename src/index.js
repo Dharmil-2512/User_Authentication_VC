@@ -5,16 +5,22 @@ const userModel = require('./models/user');
 const bodyParser = require('body-parser');
 const ejs = require('ejs');
 const InitiateMongoServer = require("./config/db");
-
-
-
-InitiateMongoServer();
-
+const cors = require('cors');
 
 const app = express();
 
 
-const port = process.env.PORT || 3000;
+app.use(cors({
+
+    origin: "*"
+
+}));
+
+InitiateMongoServer();
+
+
+
+const port = 3001;
 
 
 app.use(bodyParser.json());
@@ -32,6 +38,7 @@ app.set('view Engine', 'ejs');
 
 
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
     console.log(`The server is running on port  ${port}`);
+
 });

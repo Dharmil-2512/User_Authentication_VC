@@ -8,77 +8,94 @@ const nodeMailer = require('./nodemailer');
 const fs = require('fs');
 
 
-const jwt = require("jsonwebtoken");
+// const jwt = require("jsonwebtoken");
 
-exports.upload = async(req, res) => {
-    try {
-        console.log('log1', req.file);
+// exports.upload = async(req, res) => {
+//     try {
 
-        if (req.file == undefined) {
-            return res.status(400).send({ message: "Please upload a file!" });
-        }
-        res.status(200).send({
-            message: "Uploaded the file successfully: ",
-            savedFileName: req.savedFileName
-        });
-    } catch (err) {
-        res.status(500).send({
-            message: `Could not upload the file: ${req.file.originalname}. ${err}`,
-        });
-    }
-};
+
+//         if (req.file == undefined) {
+//             return res.status(400).send({ message: "Please upload a file!" });
+//         }
+//         const image = "http://192.168.20.96:3000/public/upload/" + req.savedFileName;
+//         return res.status(200).send({
+//             message: "Uploaded the file successfully: ",
+//             data: image
+//         });
+//     } catch (err) {
+//         console.log('error--------------');
+//         return res.status(500).send({
+//             message: `Could not upload the file: ${req.file.originalname}. ${err}`,
+//         });
+//     }
+// };
 exports.signUp = async function signUp(req, res) {
     try {
-        console.log("req - - - - -  - ", req.body, req)
-        const characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        let token = '';
-        for (let i = 0; i < 25; i++) {
-            token += characters[Math.floor(Math.random() * characters.length)];
-        }
-        console.log("token", token);
 
+        // console.log("BODY==================", req.body);
+        // console.log("FILEc ===================", req.file);
 
+        // console.log('log1', req.file, req.savedFileName);
+        if (req.file == undefined) {
+            console.log('hello')
+            return res.status(400).send({ message: "Please upload a file!" });
+        } else {
 
-
-        const user = new User({
-            name: req.body.name,
-            email: req.body.email,
-            password: bcrypt.hashSync(req.body.password, 8),
-            image: req.body.image,
-            emailVerificationToken: token
-        });
-        console.log("User==========>>>", user);
-
-        const isMatchEmail = await User.findOne({ email: req.body.email });
-        if (isMatchEmail) {
-            return res.status(409).send({
-                message: "User Already registered",
-                error: []
-            });
-        }
-        await user.save((err) => {
-            if (err) {
-                res.status(500).send({
-                    message: "invalid credentials",
-                    error: [err]
-
-                });
-                return;
+            // console.log('i am here')
+            const characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            let token = '';
+            for (let i = 0; i < 25; i++) {
+                token += characters[Math.floor(Math.random() * characters.length)];
             }
+
+
+            const password = bcrypt.hashSync(req.body.password);
+
+            const requestObj = JSON.parse(JSON.stringify(req.body));
+            // console.log("🚀 ~ file: user.controller.js ~ line 51 ~ signUp ~ requestObj", req.body)
+            // const requestObj = {}
+            requestObj.password = password;
+            requestObj.emailVerificationToken = token;
+            requestObj.image = req.savedFileName;
+
+            // console.log('request object', requestObj)
+
+
+
+            const user = new User(
+                requestObj
+            );
+            // console.log("User==========>>>", user);
+
+            const isMatchEmail = await User.findOne({ email: req.body.email });
+            if (isMatchEmail) {
+                return res.status(409).send({
+                    message: "User Already registered",
+                    error: []
+                });
+            }
+            await user.save((err) => {
+                if (err) {
+                    console.log('err', err)
+                    res.status(500).send({
+                        message: "invalid credentials",
+                        error: [err]
+                    });
+                    return;
+                }
+            });
+
+            await nodeMailer.sendConfirmationEmail(
+                user.name,
+                user.email,
+                user.emailVerificationToken
+            );
 
             res.status(200).send({
                 message: "User was registered successfully! Please check your email",
 
             });
-
-
-
-            nodeMailer.sendConfirmationEmail(
-                user.name,
-                user.email,
-                user.emailVerificationToken
-            );
-        });
+        }
     } catch (error) {
         console.log('error1', error);
 
@@ -93,7 +110,7 @@ exports.signUp = async function signUp(req, res) {
 exports.signUpVerification = async function signUpVerification(req, res, next) {
     try {
 
-        console.log("hello===>>> ");
+        console.log("hello===>>> ", req.params.EmailVerifyToken);
 
         let updatedUser = await User.findOneAndUpdate({
             emailVerificationToken: req.params.EmailVerifyToken,
@@ -112,7 +129,7 @@ exports.signUpVerification = async function signUpVerification(req, res, next) {
 
 
 
-        res.send('User Registered successfully')
+        res.redirect('http://192.168.43.150:4200/auth/login');
     } catch (error) {
         console.log('error3', error);
         res.status().send({

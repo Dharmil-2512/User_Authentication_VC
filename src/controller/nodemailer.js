@@ -18,21 +18,37 @@ exports.sendConfirmationEmail = function sendConfirmationEmail(name, email, emai
     try {
 
         const transport = nodemailer.createTransport({
+            // host: "smtp.gmail.com",
+            // port: 587,
+            // secure: false,
             service: "Gmail",
             auth: {
                 user: userMail,
                 pass: passMail,
             },
         });
-        console.log("(((", __dirname)
+
         const data = ejs.renderFile(path.join(__dirname, '../views/mail.ejs'), { name: name, EmailVerifyToken: emailVerificationToken }, function(err, data) {
-            console.log('------', typeof data)
+
             transport.sendMail({
                 from: userMail,
                 to: email,
                 subject: "Please confirm your account",
                 html: data
             })
+
+            // transport.sendMail({
+            //     from: userMail,
+            //     to: email,
+            //     subject: "Please confirm your account",
+            //     html: data
+            // }, function(err, info) {
+            //     if (err) {
+            //         console.log('ERROR ===============', err);
+            //     } else {
+            //         console.log("INFO================", info);
+            //     }
+            // })
         });
 
 

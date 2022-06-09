@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const { string } = require('joi');
 
+const GENDERS = ["Male", "Female"];
+
 const UserSchema = new mongoose.Schema({
 
     name: {
@@ -34,8 +36,14 @@ const UserSchema = new mongoose.Schema({
         type: String
     },
 
-
-
+    phone: {
+        type: String,
+        required: true
+    },
+    gender: {
+        type: String,
+        enum: GENDERS
+    },
 
 }, { timestamps: true });
 
