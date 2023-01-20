@@ -1,19 +1,28 @@
 const mongoose = require("mongoose");
 
 // Replace this with your MONGOURI.
-const MONGOURI = "mongodb://localhost:27017/Authdb";
+console.log("🚀 ~ file: db.js:5 ~  process.env.URL", process.env.URL);
 
 const InitiateMongoServer = () => {
-    try {
-        mongoose.connect(MONGOURI, {
-            useNewUrlParser: true,
+  mongoose.Promise = global.Promise;
 
+  mongoose.set("debug", false);
+  mongoose
+    .connect(process.env.URL, {
+      useNewUrlParser: true,
+    })
+    .then(
+      () => {
+        console.log("Database Connected");
+      },
+      (err) => {
+        console.log("connection issue ", err);
+        mongoose.connection.on("error", (err) => {
+          console.error(`MongoDB connection error: ${err}`);
+          process.exit(-1);
         });
-        console.log("Connected to DB !!");
-    } catch (e) {
-        console.log(e);
-        throw e;
-    }
+      }
+    );
 };
 
 module.exports = InitiateMongoServer;
