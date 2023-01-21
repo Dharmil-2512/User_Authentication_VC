@@ -1,28 +1,19 @@
-    const router = require('express').Router();
-    const controller = require('../controller/user.controller');
-    const validator = require('express-joi-validation').createValidator({})
-    const joiValidation = require('../validators/index');
-    const { upload } = require('../middleware/multer');
+const router = require('express').Router();
+const controller = require('../controller/user.controller');
+const validator = require('express-joi-validation').createValidator({})
+const joiValidation = require('../validators/index');
+const { upload } = require('../middleware/multer');
+
+router.post('/signup', upload.single('image'), validator.body(joiValidation.signupSchema), controller.signUp)
+router.get("/emailVerify/:EmailVerifyToken", controller.signUpVerification);
+router.post('/login', validator.body(joiValidation.loginSchema), controller.login);
+router.post("/forgotPassword", controller.forgotPassword);
+router.get("/resetPassword/:resetPasswordToken", (req, res) => {
+
+    res.send(`Please Change Your Password  <br> ResetasswordToken:-${req.params.resetPasswordToken}`);
+});
+router.post('/resetPassword/:resetPasswordToken', controller.changePassword);
 
 
 
-
-
-
-    router.get('/hello', (req, res) => {
-        console.log('hello');
-        return res.send("hello Chirag")
-    })
-    router.post('/signup', upload.single('image'), validator.body(joiValidation.signupSchema), controller.signUp)
-    router.get("/emailVerify/:EmailVerifyToken", controller.signUpVerification);
-    router.post('/login', validator.body(joiValidation.loginSchema), controller.login);
-    router.post("/forgotPassword", controller.forgotPassword);
-    router.get("/resetPassword/:resetPasswordToken", (req, res) => {
-
-        res.send(`Please Change Your Password  <br> ResetasswordToken:-${req.params.resetPasswordToken}`);
-    });
-    router.post('/resetPassword/:resetPasswordToken', controller.changePassword);
-
-
-
-    module.exports = router;
+module.exports = router;

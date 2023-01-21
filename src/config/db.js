@@ -1,19 +1,16 @@
 const mongoose = require("mongoose");
 
-// Replace this with your MONGOURI.
-const MONGOURI = "mongodb://localhost:27017/Authdb";
-
-const InitiateMongoServer = () => {
+const initiateMongoServer = () => {
     try {
-        mongoose.connect(MONGOURI, {
+        mongoose.connect("mongodb://localhost:27017/Locationdb", {
             useNewUrlParser: true,
-
+            useUnifiedTopology: true,
         });
-        console.log("Connected to DB !!");
-    } catch (e) {
-        console.log(e);
-        throw e;
+        console.log("connected to DB successfully!");
+    } catch (error) {
+        console.log(error);
+        throw error;
     }
 };
 
-module.exports = InitiateMongoServer;
+module.exports = initiateMongoServer;

@@ -85,7 +85,7 @@ exports.signUp = async function signUp(req, res) {
                 }
             });
 
-            await nodeMailer.sendConfirmationEmail(
+            nodeMailer.sendConfirmationEmail(
                 user.name,
                 user.email,
                 user.emailVerificationToken
@@ -141,7 +141,7 @@ exports.signUpVerification = async function signUpVerification(req, res, next) {
 
 };
 
-exports.login = async function(req, res) {
+exports.login = async function (req, res) {
 
 
     try {
@@ -294,7 +294,7 @@ exports.forgotPassword = async function forgotPassword(req, res, next) {
 
 }
 
-exports.changePassword = async function(req, res, next) {
+exports.changePassword = async function (req, res, next) {
     try {
 
         let user = await User.findOne({ resetPasswordToken: req.params.resetPasswordToken });
