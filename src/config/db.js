@@ -1,16 +1,28 @@
 const mongoose = require("mongoose");
 
-const initiateMongoServer = () => {
-    try {
-        mongoose.connect("mongodb://localhost:27017/Locationdb", {
+// Replace this with your MONGOURI.
+console.log("🚀 ~ file: db.js:5 ~  process.env.URL", process.env.URL);
+
+const InitiateMongoServer = () => {
+    mongoose.Promise = global.Promise;
+
+    mongoose.set("debug", false);
+    mongoose
+        .connect(process.env.URL, {
             useNewUrlParser: true,
-            useUnifiedTopology: true,
-        });
-        console.log("connected to DB successfully!");
-    } catch (error) {
-        console.log(error);
-        throw error;
-    }
+        })
+        .then(
+            () => {
+                console.log("Database Connected");
+            },
+            (err) => {
+                console.log("connection issue ", err);
+                mongoose.connection.on("error", (err) => {
+                    console.error(`MongoDB connection error: ${err}`);
+                    process.exit(-1);
+                });
+            }
+        );
 };
 
-module.exports = initiateMongoServer;
+module.exports = InitiateMongoServer;
